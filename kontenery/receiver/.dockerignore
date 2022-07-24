@@ -1,0 +1,4 @@
+**/*.pem
+**/*.ENV
+**/modules/*.py
+*.git 
