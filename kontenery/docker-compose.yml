@@ -1,0 +1,73 @@
+services:
+  rabbitmq: 
+    build: ./rabbitmq
+    image: example/rabbitmq:v1.0
+    container_name: rabbitmq
+    command: /init.sh
+    networks:
+      - mynet 
+  publisher: 
+    build: ./publisher 
+    image: example/publisher:v1.0 
+    command: java -jar /app/app.jar --spring.profiles.active=dev
+    container_name: publisher 
+    ports:
+      - 9292:9292
+    networks:
+      - mynet
+    environment:
+      - HOST=rabbitmq
+    mem_limit: 2048m
+    cpus: 0.5 
+    security_opt: 
+      - no-new-privileges:true
+    depends_on:
+      - rabbitmq 
+  redis: 
+    image: redis 
+    networks:
+      - mynet
+    container_name: redishost 
+  receiver: 
+    build: ./receiver
+    image: example/receiver:v1.0
+    container_name: receiver 
+    command: python3 main.py 
+    networks:
+      - mynet
+    environment:
+      - RABIT_HOST=rabbitmq
+      - REDIS_HOST=redishost
+    restart: unless-stopped
+    cpus: 0.5 
+    security_opt: 
+      - no-new-privileges:true
+    read_only: true
+    depends_on:
+      - rabbitmq 
+      - redis
+  itemCounter: 
+    build: ./itemCounter
+    image: example/itemcounter:v1.0
+    container_name: itemcounter 
+    command: /app/item-counter
+    networks:
+      - mynet 
+    ports: 
+      - 9090:9090
+    environment: 
+      - REDIS_HOST=redishost:6379
+    mem_limit: 2048m
+    cpus: 0.5 
+    security_opt: 
+      - no-new-privileges:true
+    read_only: true 
+    depends_on:
+      - rabbitmq 
+    
+    
+
+networks:
+  mynet: 
+    driver: bridge
+    name: mynet

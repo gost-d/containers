@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft-7/schema",
+  "$id": "https://example.com/product.schema.json",
+  "title": "User",
+  "description": "A user in the catalog",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 26
+    },
+    "surname": {
+      "description": "Surname of the user",
+      "type": "string"
+    },
+    "mail": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string",
+      "maxLength": 9,
+      "minLength": 9
+    },
+    "street": {
+      "type": "string"
+    }
+  },
+  "required": [ "name", "surname","phone" ]
+}
