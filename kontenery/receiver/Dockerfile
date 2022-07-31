@@ -4,4 +4,4 @@ COPY . .
 RUN pip3 install -r requirements.txt 
 RUN addgroup --system secureusers && useradd --system --group secureusers ruser
 USER ruser 
-CMD [ "python3", "main.py"]
+CMD [ "python3", "-u", "main.py"]

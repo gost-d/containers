@@ -51,9 +51,15 @@ func getEnv(key, defaultValue string) string {
 	return value
 }
 
+func handler(c *gin.Context) {
+
+	c.String(http.StatusOK, "")
+
+}
 func main() {
 	HOST := getEnv("HOST", "0.0.0.0:9090")
 	router := gin.Default()
 	router.GET("/get", getNumberOfItems)
+	router.GET("/healthz", handler)
 	router.Run(HOST)
 }
